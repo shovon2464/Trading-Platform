@@ -29,6 +29,7 @@ spring:
     show-sql: false
     properties:
       hibernate.format_sql: true
+      hibernate.dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: none
 
@@ -57,3 +58,12 @@ cloud:
   aws:
     region:
       static: ${AWS_REGION}
+
+
+
+logging:
+  level:
+    org.hibernate: warn
+    org.hibernate.orm.connections.pooling: warn
+    org.hibernate.orm.deprecation: error
+    org.springframework.orm.jpa: warn

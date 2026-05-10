@@ -1,0 +1,51 @@
+services:
+  tradingserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - tradingserver_network
+    environment:
+      APP_ENV: ${APP_ENV}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}
+      JWT_RESET_PASSWORD_EXPIRATION: ${JWT_RESET_PASSWORD_EXPIRATION}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_SERVER_ACCESS_EXPIRATION: ${JWT_SERVER_ACCESS_EXPIRATION}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_URL: ${MYSQL_URL}
+      MYSQL_USER: ${MYSQL_USERNAME}
+
+  db:
+    image: mysql:8.0.36
+    environment:
+      MYSQL_DATABASE: tradingdb
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "6606:3306"  # Map port 6606 on the host to port 3306 in the container
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - tradingserver_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+volumes:
+  mysql-data:
+  dynamodb-data:
+
+networks:
+  tradingserver_network:
+    external: true

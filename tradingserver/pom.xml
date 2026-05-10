@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.shovon</groupId>
 	<artifactId>tradingserver</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name/>
 	<description/>
 	<url/>
@@ -69,7 +69,6 @@
 		<dependency>
     <groupId>com.mysql</groupId>
     <artifactId>mysql-connector-j</artifactId>
-    <scope>test</scope>
 		</dependency>
 
 		<dependency>
