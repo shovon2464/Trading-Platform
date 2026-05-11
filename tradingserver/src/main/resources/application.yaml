@@ -48,10 +48,10 @@ management:
 #JWT Configuration
 jwt:
   secret: ${JWT_SECRET}
-  expirations: ${JWT_EXPIRATION}
-  reset-password-xpiration: ${JWT_RESET_PASSWORD_EXPIRATION}
+  expiration: ${JWT_EXPIRATION}
+  reset-password-expiration: ${JWT_RESET_PASSWORD_EXPIRATION}
   refresh-expiration: ${JWT_REFRESH_EXPIRATION}
-  serverAccessExpiration: ${JWT_SERVER_ACCESS_EXPIRATION}
+  server-access-expiration: ${JWT_SERVER_ACCESS_EXPIRATION}
 
 
 # AWS Credentials
