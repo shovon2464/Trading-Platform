@@ -1,6 +1,7 @@
 package com.shovon.tradingserver.model;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
@@ -32,6 +32,7 @@ public class User {
 
   private String lastName;
 
+  @Column(nullable = false, unique = true)
   private String email;
 
   private String password;
