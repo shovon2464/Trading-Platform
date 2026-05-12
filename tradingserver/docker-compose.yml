@@ -23,6 +23,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_URL: ${MYSQL_URL}
       MYSQL_USER: ${MYSQL_USERNAME}
+      MONGO_DATABASE: ${MONGO_DATABASE}
+      MONGO_URL: ${MONGO_URL}
 
   db:
     image: mysql:8.0.36
@@ -42,9 +44,27 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+
+  mongodb:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - tradingserver_network
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+
 volumes:
   mysql-data:
-  dynamodb-data:
+  mongodb-data:
 
 networks:
   tradingserver_network:

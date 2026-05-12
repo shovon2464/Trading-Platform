@@ -1,7 +1,6 @@
 package com.shovon.tradingserver.controller;
 
 
-import com.shovon.tradingserver.dto.response.LoginResponse;
 import com.shovon.tradingserver.dto.request.UserInput;
 import com.shovon.tradingserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
