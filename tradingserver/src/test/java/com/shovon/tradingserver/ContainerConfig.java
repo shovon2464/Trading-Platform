@@ -11,6 +11,7 @@ public class ContainerConfig implements BeforeAllCallback {
   public void beforeAll(ExtensionContext context) {
     this.updateSystemProps();
     this.updateAWSProps();
+    this.updateMongoDBProps();
     if(!ThrowawayMySQLContainer.mysqlContainer.isRunning()) {
       ThrowawayMySQLContainer.mysqlContainer.start();
       this.updateMySQLProps();
@@ -30,6 +31,13 @@ public class ContainerConfig implements BeforeAllCallback {
     System.setProperty("APP_ENV", "test");
     System.setProperty("AWS_REGION", "testRegion");
   }
+
+  public void updateMongoDBProps() {
+    System.setProperty("MONGO_URL", "mongodb://localhost:27017");
+    System.setProperty("MONGO_DATABASE", "tradingdb_test");
+  }
+
+
 
   public void updateMySQLProps() {
     System.setProperty("MYSQL_URL", ThrowawayMySQLContainer.mysqlContainer.getJdbcUrl());
