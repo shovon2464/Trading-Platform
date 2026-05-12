@@ -1,12 +1,15 @@
 package com.shovon.tradingserver.model;
 
 
+import com.shovon.tradingserver.types.UserGenderType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,5 +39,30 @@ public class User {
   private String email;
 
   private String password;
+
+  private String loginPin;
+
+  private String phoneNumber;
+
+  private LocalDate birthday;
+
+  private String biometricKey;
+
+  private UserGenderType gender;
+
+  private int wrongPinAttempts;
+
+  private LocalDateTime blockedUntilPin;
+
+  private int wrongPasswordAttempts;
+
+  private LocalDateTime blockedUntilPassword;
+
+  private Long balance;
+
+  private LocalDateTime createdDate;
+
+  private LocalDateTime updatedDate;
+
 
 }
