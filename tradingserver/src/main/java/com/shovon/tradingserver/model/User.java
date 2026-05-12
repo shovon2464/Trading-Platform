@@ -4,6 +4,8 @@ package com.shovon.tradingserver.model;
 import com.shovon.tradingserver.types.UserGenderType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,6 +50,7 @@ public class User {
 
   private String biometricKey;
 
+  @Enumerated(EnumType.STRING)
   private UserGenderType gender;
 
   private int wrongPinAttempts;
