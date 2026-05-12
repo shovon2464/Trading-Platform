@@ -24,6 +24,12 @@ public class UserService {
     if (userInput.getEmail() == null) {
       throw new IllegalArgumentException("Email is required");
     }
+    String email = userInput.getEmail();
+    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+
+    if (!email.matches(emailRegex)) {
+        throw new IllegalArgumentException("Invalid email format");
+    }
     if (userInput.getPassword() == null || userInput.getPassword().isBlank()) {
       throw new IllegalArgumentException("Password is required");
     }
@@ -60,6 +66,19 @@ public class UserService {
   }
 
   public LoginResponse login(UserInput userInput) {
+
+    if (userInput.getEmail() == null) {
+      throw new IllegalArgumentException("Email is required");
+    }
+    String email = userInput.getEmail();
+    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    if (!email.matches(emailRegex)) {
+        throw new IllegalArgumentException("Invalid email format");
+    }
+
+    if (userInput.getPassword() == null || userInput.getPassword().isBlank()) {
+      throw new IllegalArgumentException("Password is required");
+    }
     Optional<User> optUser = this.userRepository.findByEmail(userInput.getEmail());
     if (optUser.isEmpty()) {
       throw new RuntimeException("User Not Found");
