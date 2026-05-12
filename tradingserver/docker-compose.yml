@@ -25,6 +25,10 @@ services:
       MYSQL_USER: ${MYSQL_USERNAME}
       MONGO_DATABASE: ${MONGO_DATABASE}
       MONGO_URL: ${MONGO_URL}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
 
   db:
     image: mysql:8.0.36

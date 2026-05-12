@@ -36,6 +36,11 @@ spring:
     hibernate:
       ddl-auto: none
 
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
 
 management:
   endpoints:
