@@ -1,7 +1,9 @@
 package com.shovon.tradingserver.controller;
 
 
+import com.shovon.tradingserver.dto.request.UserCreateInput;
 import com.shovon.tradingserver.dto.request.UserInput;
+import com.shovon.tradingserver.dto.request.UserLoginInput;
 import com.shovon.tradingserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +22,38 @@ public class UserController {
   private UserService userService;
 
 
-  @PostMapping("/create-account")
-  public ResponseEntity<?> createAccount(@RequestBody UserInput userInput) {
+  @PostMapping("/check-email")
+  public ResponseEntity<?> checkEmail(@RequestBody String email) {
     try {
-      return ResponseEntity.ok(this.userService.create(userInput));
+      return ResponseEntity.ok(this.userService.checkEmail(email));
+    } catch (Exception ex) {
+      return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+  }
+
+
+  @PostMapping("/create-account")
+  public ResponseEntity<?> createAccount(@RequestBody UserCreateInput userCreateInput) {
+    try {
+      return ResponseEntity.ok(this.userService.create(userCreateInput));
     } catch (Exception ex) {
       return ResponseEntity.badRequest().body(ex.getMessage());
     }
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody UserInput userInput) {
+  public ResponseEntity<?> login(@RequestBody UserLoginInput userInput) {
     try {
       return ResponseEntity.ok(this.userService.login(userInput));
+    } catch (Exception ex) {
+      return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+  }
+
+  @PostMapping("/refresh-token")
+  public ResponseEntity<?> refreshToken(@RequestBody String refreshToken) {
+    try {
+      return ResponseEntity.ok(this.userService.refreshLogin(refreshToken));
     } catch (Exception ex) {
       return ResponseEntity.badRequest().body(ex.getMessage());
     }

@@ -1,4 +1,4 @@
-package com.shovon.tradingserver.dto.response;
+package com.shovon.tradingserver.dto.request;
 
 
 import lombok.AllArgsConstructor;
@@ -12,19 +12,10 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
-
-  private String accessToken;
-
-  private String refreshToken;
-
-  private String id;
-
-  private String fullName;
+public class UserLoginInput {
 
   private String email;
 
-  private Boolean phoneExist;
-
+  private String password;
 
 }

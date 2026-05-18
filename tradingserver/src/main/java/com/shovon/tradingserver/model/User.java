@@ -40,6 +40,7 @@ public class User {
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
+  @Enumerated(EnumType.STRING)
   @Builder.Default
   private UserRole userRole = UserRole.CUSTOMER;
 

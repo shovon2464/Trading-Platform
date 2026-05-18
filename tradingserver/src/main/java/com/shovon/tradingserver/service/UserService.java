@@ -1,10 +1,14 @@
 package com.shovon.tradingserver.service;
 
+import com.shovon.tradingserver.dto.request.UserCreateInput;
 import com.shovon.tradingserver.dto.request.UserInput;
+import com.shovon.tradingserver.dto.request.UserLoginInput;
 import com.shovon.tradingserver.dto.response.LoginResponse;
 import com.shovon.tradingserver.model.User;
 import com.shovon.tradingserver.repository.UserRepository;
 import com.shovon.tradingserver.security.JwtUtil;
+import com.shovon.tradingserver.types.OtpType;
+import com.shovon.tradingserver.utils.TimeUtils;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -19,35 +23,59 @@ public class UserService {
   @Autowired
   private JwtUtil jwtUtil;
 
+  @Autowired
+  private OtpService otpService;
 
-  public LoginResponse create(UserInput userInput) {
-    if (userInput.getEmail() == null) {
+
+  public Boolean checkEmail(String email) {
+    if (email == null) {
       throw new IllegalArgumentException("Email is required");
     }
-    String email = userInput.getEmail();
-    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-
+    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9";
     if (!email.matches(emailRegex)) {
         throw new IllegalArgumentException("Invalid email format");
     }
-    if (userInput.getPassword() == null || userInput.getPassword().isBlank()) {
+    Optional<User> optUser = this.userRepository.findByEmail(email);
+    if (optUser.isPresent()) {
+      return true;
+    }
+
+    this.otpService.sendOtp(email, OtpType.CREATE_ACCOUNT);
+    return false;
+  }
+
+
+  public LoginResponse create(UserCreateInput userCreateInput) {
+    if (userCreateInput.getEmail() == null) {
+      throw new IllegalArgumentException("Email is required");
+    }
+    String email = userCreateInput.getEmail();
+    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    if (!email.matches(emailRegex)) {
+        throw new IllegalArgumentException("Invalid email format");
+    }
+
+    if (userCreateInput.getPassword() == null || userCreateInput.getPassword().isBlank()) {
       throw new IllegalArgumentException("Password is required");
     }
 
-    Optional<User> optUser = this.userRepository.findByEmail(userInput.getEmail());
+    Optional<User> optUser = this.userRepository.findByEmail(userCreateInput.getEmail());
 
     if (optUser.isPresent()) {
-      throw new RuntimeException("Email already exists");
+      throw new RuntimeException("User with this Email already exists");
     }
 
-    String encode = BCrypt.hashpw(userInput.getPassword(), BCrypt.gensalt(12));
+
+    String encode = BCrypt.hashpw(userCreateInput.getPassword(), BCrypt.gensalt(12));
+
 
     User user = User.builder()
-        .userName(userInput.getUserName())
-        .firstName(userInput.getFirstName())
-        .lastName(userInput.getLastName())
-        .email(userInput.getEmail())
+        .fullName(userCreateInput.getFullName())
+        .email(email)
         .password(encode)
+        .phoneNumber(userCreateInput.getPhoneNumber())
+        .gender(userCreateInput.getGender())
+        .createdDate(TimeUtils.nowUtc())
         .build();
 
     User savedUser = this.userRepository.save(user);
@@ -59,13 +87,14 @@ public class UserService {
         .accessToken(accessToken)
         .refreshToken(refreshToken)
         .id(savedUser.getId().toString())
-        .userName(savedUser.getUserName())
+        .fullName(savedUser.getFullName())
         .email(savedUser.getEmail())
+        .phoneExist(savedUser.getPhoneNumber() != null)
         .build();
 
   }
 
-  public LoginResponse login(UserInput userInput) {
+  public LoginResponse login(UserLoginInput userInput) {
 
     if (userInput.getEmail() == null) {
       throw new IllegalArgumentException("Email is required");
@@ -79,7 +108,9 @@ public class UserService {
     if (userInput.getPassword() == null || userInput.getPassword().isBlank()) {
       throw new IllegalArgumentException("Password is required");
     }
+    System.out.println("before");
     Optional<User> optUser = this.userRepository.findByEmail(userInput.getEmail());
+    System.out.println("after");
     if (optUser.isEmpty()) {
       throw new RuntimeException("User Not Found");
     }
@@ -97,9 +128,36 @@ public class UserService {
         .accessToken(accessToken)
         .refreshToken(refreshToken)
         .id(user.getId().toString())
-        .userName(user.getUserName())
+        .fullName(user.getFullName())
         .email(user.getEmail())
+        .phoneExist(user.getPhoneNumber() != null)
         .build();
   }
+
+
+  public LoginResponse refreshLogin(String refreshToken) {
+    if (refreshToken == null || refreshToken.isBlank()) {
+      throw new IllegalArgumentException("Refresh token is required");
+    }
+
+    this.jwtUtil.validateToken(refreshToken);
+    String email = jwtUtil.getEmailFromToken(refreshToken);
+
+    Optional<User> optUser = this.userRepository.findByEmail(email);
+    if (optUser.isEmpty()) {
+      throw new RuntimeException("User Not Found");
+    }
+
+    User user = optUser.get();
+
+    String newAccessToken = this.jwtUtil.generateAccessToken(user.getEmail());
+    String newRefreshToken = this.jwtUtil.generateRefreshToken(user.getEmail());
+
+    return LoginResponse.builder().accessToken(newAccessToken).refreshToken(newRefreshToken)
+        .id(user.getId().toString()).fullName(user.getFullName()).email(user.getEmail())
+        .phoneExist(user.getPhoneNumber() != null)
+        .build();
+  }
+
 
 }

@@ -1,6 +1,7 @@
 package com.shovon.tradingserver.security;
 
 import com.shovon.tradingserver.model.User;
+import com.shovon.tradingserver.types.UserRole;
 import java.util.Collection;
 import java.util.Collections;
 import org.jspecify.annotations.Nullable;
@@ -12,34 +13,35 @@ public class CustomUserDetails implements UserDetails {
 
   private final Long id;
 
-  private final String userName;
-
-  private final String firstName;
-
-  private final String lastName;
+  private final String fullName;
 
   private final String email;
 
-   private final String password;
+  private final String password;
+
+  private final UserRole userRole;
 
 
   public CustomUserDetails(User user) {
     this.id= user.getId();
-    this.userName = user.getUserName();
-    this.firstName = user.getFirstName();
-    this.lastName = user.getLastName();
+    this.fullName = user.getFullName();
     this.email = user.getEmail();
     this.password = user.getPassword();
+    this.userRole = user.getUserRole();
+  }
+
+  public Long getId() {
+    return this.id;
   }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+    return Collections.singletonList(new SimpleGrantedAuthority(this.userRole.name()));
   }
 
   @Override
   public String getUsername() {
-    return this.userName;
+    return this.fullName;
   }
 
   @Override
