@@ -1,0 +1,2 @@
+ALTER TABLE user
+ADD COLUMN is_two_factor_enabled BOOLEAN DEFAULT FALSE;

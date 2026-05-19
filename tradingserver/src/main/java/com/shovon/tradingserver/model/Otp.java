@@ -34,7 +34,7 @@ public class Otp {
   private String otpCode;
 
   @Enumerated(EnumType.STRING)
-  private OtpType optType;
+  private OtpType otpType;
 
   private LocalDateTime createdDate;
 

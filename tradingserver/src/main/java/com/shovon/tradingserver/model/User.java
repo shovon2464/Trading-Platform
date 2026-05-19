@@ -49,6 +49,9 @@ public class User {
   @Enumerated(EnumType.STRING)
   private UserGenderType gender;
 
+  @Builder.Default
+  private Boolean isTwoFactorEnabled = false;
+
   private LocalDateTime createdDate;
 
   private LocalDateTime updatedDate;

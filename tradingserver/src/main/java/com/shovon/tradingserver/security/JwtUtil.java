@@ -7,6 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.shovon.tradingserver.types.OtpType;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,7 @@ public class JwtUtil {
   public String generateAccessToken(String email) {
     return JWT.create()
         .withSubject(email)
+        .withIssuedAt(new Date(System.currentTimeMillis()))
         .withExpiresAt(new Date(System.currentTimeMillis() + this.expiration))
         .sign(Algorithm.HMAC512(this.secret));
   }
@@ -40,7 +42,16 @@ public class JwtUtil {
   public String generateRefreshToken(String email) {
     return JWT.create()
         .withSubject(email)
+        .withIssuedAt(new Date(System.currentTimeMillis()))
         .withExpiresAt(new Date(System.currentTimeMillis() + this.refreshExpiration))
+        .sign(Algorithm.HMAC512(this.secret));
+  }
+
+  public String generatePurposeToken(String email, OtpType purpose) {
+    return JWT.create().withSubject(email)
+        .withClaim("purpose", purpose.name())
+        .withIssuedAt(new Date())
+        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
         .sign(Algorithm.HMAC512(this.secret));
   }
 
@@ -66,6 +77,23 @@ public class JwtUtil {
     DecodedJWT jwt = JWT.decode(token);
     return jwt.getSubject();
   }
+
+  public void validatePurposeToken(String token, String email, OtpType expectedPurpose) {
+    DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(this.secret))
+        .build()
+        .verify(token);
+
+    String tokenEmail = decodedJWT.getSubject();
+    String purpose = decodedJWT.getClaim("purpose").asString();
+
+    if (!email.equals(tokenEmail)) {
+        throw new IllegalArgumentException("Token does not match email");
+    }
+
+    if (!expectedPurpose.name().equals(purpose)) {
+        throw new IllegalArgumentException("Invalid token purpose");
+    }
+}
 
   public boolean isExpired(String token) {
     try {

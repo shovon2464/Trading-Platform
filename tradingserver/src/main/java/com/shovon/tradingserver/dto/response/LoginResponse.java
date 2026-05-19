@@ -26,5 +26,9 @@ public class LoginResponse {
 
   private Boolean phoneExist;
 
+  private Boolean isTwoFactorEnabled;
+
+  private String message;
+
 
 }

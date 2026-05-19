@@ -2,7 +2,7 @@ CREATE TABLE otp (
     id BIGINT NOT NULL AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     otp_code VARCHAR(400) NOT NULL,
-    opt_type VARCHAR(50) NOT NULL,
+    otp_type VARCHAR(50) NOT NULL,
     created_date DATETIME NOT NULL,
     PRIMARY KEY (id)
 );
