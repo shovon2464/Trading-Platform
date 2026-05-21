@@ -29,6 +29,7 @@ services:
       MAIL_PORT: ${MAIL_PORT}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
+      FINHUB_API: ${FINHUB_API}
 
   db:
     image: mysql:8.0.36
