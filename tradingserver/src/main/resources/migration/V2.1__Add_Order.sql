@@ -1,4 +1,4 @@
-CREATE TABLE order (
+CREATE TABLE orders (
     id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     price INT NOT NULL,
