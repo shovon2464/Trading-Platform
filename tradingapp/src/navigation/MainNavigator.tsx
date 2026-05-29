@@ -1,0 +1,28 @@
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { mergedStacks } from './ScreenCollections.tsx';
+
+const Stack = createNativeStackNavigator();
+
+
+const MainNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      {mergedStacks.map((screen, index) => {
+        return (
+          <Stack.Screen
+            key={index}
+            name={screen.name}
+            component={screen.component}
+          />
+        );
+      })}
+    </Stack.Navigator>
+  );
+};
+
+export default MainNavigator;
