@@ -1,13 +1,9 @@
-import { View, Text } from 'react-native';
 import React from 'react';
+import Navigation from './src/navigation/Navigation.tsx';
 
 
 const App = () => {
-  return (
-    <View>
-      <Text>Trading App</Text>
-    </View>
-  );
+  return <Navigation />
 }
 
 export default App;
