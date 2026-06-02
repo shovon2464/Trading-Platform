@@ -7,6 +7,7 @@ import {
   computeWindowedRenderLimits
 } from '@react-native/virtualized-lists/types_generated/Lists/VirtualizeUtils';
 import styles from 'react-native-webview/lib/WebView.styles';
+import { Colors } from '../../constants/Colors.tsx';
 
 interface Props {
   variant?:
@@ -37,7 +38,7 @@ const CustomText: FC<Props> = ({
   numberOfLines,
   onLayout,
 }) => {
-  const { colors} = useTheme();
+  //const { colors} = useTheme();
 
   let computedFontSize: number;
 
@@ -102,7 +103,7 @@ const CustomText: FC<Props> = ({
     <Text
       style={[
         styles2.text,
-        { color: colors.text, fontSize: computedFontSize },
+        { color: Colors.text, fontSize: computedFontSize },
         fontFamilyStyle,
         style,
       ]}

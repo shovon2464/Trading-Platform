@@ -3,14 +3,12 @@ import type { RootState } from '../store.tsx';
 
 interface UserState {
   user: {
-    name?: string;
-    userId?: string;
+    fullName?: string;
+    id?: string;
     email?: string;
-    login_pin_exist?: string;
-    phone_exist?: string;
+    phoneExist?: boolean;
     balance?: number;
   };
-
 }
 
 const initialState:UserState = {
