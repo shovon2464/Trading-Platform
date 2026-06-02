@@ -34,6 +34,10 @@ public class CustomUserDetails implements UserDetails {
     return this.id;
   }
 
+  public String getEmail() {
+    return this.email;
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Collections.singletonList(new SimpleGrantedAuthority(this.userRole.name()));

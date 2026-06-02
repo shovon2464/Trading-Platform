@@ -242,4 +242,19 @@ public class UserService {
   }
 
 
+  public LoginResponse getProfile(String email) {
+    Optional<User> optUser = this.userRepository.findByEmail(email);
+
+    User user = optUser.get();
+
+    String newAccessToken = this.jwtUtil.generateAccessToken(user.getEmail());
+    String newRefreshToken = this.jwtUtil.generateRefreshToken(user.getEmail());
+
+    return LoginResponse.builder().accessToken(newAccessToken).refreshToken(newRefreshToken)
+        .id(user.getId().toString()).fullName(user.getFullName()).email(user.getEmail())
+        .phoneExist(user.getPhoneNumber() != null)
+        .build();
+  }
+
+
 }
