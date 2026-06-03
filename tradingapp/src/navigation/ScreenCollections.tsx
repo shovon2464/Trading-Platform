@@ -5,6 +5,9 @@ import PersonalDetailsScreen from '../screens/authentication/PersonalDetailsScre
 import EmailScreen from '../screens/authentication/EmailScreen.tsx';
 import AuthVerification from '../screens/authentication/AuthVerification.tsx';
 import Stock from '../screens/stock/Stock.tsx';
+import EmailPasswordScreen from '../screens/authentication/EmailPasswordScreen.tsx';
+import EmailOtpScreen from '../screens/authentication/EmailOtpScreen.tsx';
+import ForgotPassword from '../screens/authentication/ForgotPassword.tsx';
 
 export const authStacks = [
   {
@@ -28,8 +31,20 @@ export const authStacks = [
     component: PersonalDetailsScreen,
   },
   {
-    name: 'AuthVerification',
+    name: 'AuthVerificationScreen',
     component: AuthVerification,
+  },
+  {
+    name: 'EmailPasswordScreen',
+    component: EmailPasswordScreen,
+  },
+  {
+    name: 'EmailOtpScreen',
+    component: EmailOtpScreen,
+  },
+  {
+    name: 'ForgotPasswordScreen',
+    component: ForgotPassword,
   }
 ];
 

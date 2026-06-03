@@ -3,10 +3,31 @@ export const validateEmail = (email: string) => {
   return regex.test(email);
 };
 
-export const validatePasswordLength = (password: string) => {
-  const regex= /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  return regex.test(password);
-};
+export function validatePasswordLength(password) {
+  // 1) check length
+  if (password.length < 8 || password.length > 20) {
+    return false;
+  }
+
+  // 2) check for at least one letter and one digit
+  let hasLetter = false;
+  let hasDigit = false;
+
+  for (let ch of password) {
+    if (ch >= '0' && ch <= '9') {
+      hasDigit = true;
+    } else if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
+      hasLetter = true;
+    }
+    // once both are true, we can stop
+    if (hasLetter && hasDigit) {
+      return true;
+    }
+  }
+
+  // if we finish the loop without both flags, it’s invalid
+  return false;
+}
 
 
 export const validatePasswordEntry = (

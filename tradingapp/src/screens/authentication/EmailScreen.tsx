@@ -3,9 +3,12 @@ import React, { useState } from 'react';
 import CustomSafeAreaView from '../../components/global/CustomSafeAreaView.tsx';
 import BackButton from '../../components/global/BackButton.tsx';
 import CenteredLogo from '../../components/global/CenteredLogo.tsx';
+import CustomButton from '../../components/global/CustomButton.tsx';
 import CustomInput from '../../components/inputs/CustomInputs.tsx';
 import { useAppDispatch } from '../../redux/reduxHook.tsx';
 import { validateEmail } from '../../utils/ValidationUtils.tsx';
+import {checkEmail} from "../../redux/actions/userAction.tsx";
+import { GlobalStyles } from '../../styles/GlobalStyles.tsx';
 
 const EmailScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +26,7 @@ const EmailScreen = () => {
   const handleOnSubmit = async () => {
     setLoading(true);
     if (validate()) {
-      await dispatch(CheckEmail({ email: email.toLowerCase() }));
+      await dispatch(checkEmail({ email: email.toLowerCase() }));
     }
     setLoading(false);
   }
@@ -32,7 +35,7 @@ const EmailScreen = () => {
       <BackButton path="LoginScreen" />
 
       <ScrollView>
-        <CenteredLogo/>
+        <CenteredLogo />
 
         <CustomInput
           label="EMAIL ADDRESS"
@@ -42,16 +45,25 @@ const EmailScreen = () => {
           focusable={true}
           autoFocus={true}
           error={emailError}
-          // onEndEditing-{() => validate()}
-          onChangeText={(text) =>{
+          onEndEditing={() => validate()}
+          onChangeText={text => {
             setEmail(text);
-            setEmailError("");
+            setEmailError('');
           }}
           placeholder="Eg: me@gmail.com"
           onSubmitEditing={handleOnSubmit}
         />
       </ScrollView>
-
+      <View style={GlobalStyles.bottomBtn}>
+        <CustomButton
+          text="NEXT"
+          loading={loading}
+          disabled={!validateEmail(email) || loading}
+          onPress={() => {
+            handleOnSubmit();
+          }}
+        />
+      </View>
     </CustomSafeAreaView>
   );
 };

@@ -30,7 +30,7 @@ public class UserService {
     if (email == null) {
       throw new IllegalArgumentException("Email is required");
     }
-    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9";
+    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     if (!email.matches(emailRegex)) {
         throw new IllegalArgumentException("Invalid email format");
     }

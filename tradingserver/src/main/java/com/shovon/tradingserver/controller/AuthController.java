@@ -1,5 +1,6 @@
 package com.shovon.tradingserver.controller;
 
+import com.shovon.tradingserver.dto.request.CheckEmailRequest;
 import com.shovon.tradingserver.dto.request.UserLoginInput;
 import com.shovon.tradingserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,9 @@ public class AuthController {
   private UserService userService;
 
   @PostMapping("/check-email")
-  public ResponseEntity<?> checkEmail(@RequestBody String email) {
+  public ResponseEntity<?> checkEmail(@RequestBody CheckEmailRequest request) {
     try {
-      return ResponseEntity.ok(this.userService.checkEmail(email));
+      return ResponseEntity.ok(this.userService.checkEmail(request.getEmail()));
     } catch (Exception ex) {
       return ResponseEntity.badRequest().body(ex.getMessage());
     }

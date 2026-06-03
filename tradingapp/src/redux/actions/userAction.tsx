@@ -1,9 +1,10 @@
 import { appAxios } from '../../connectors/apiConfig.tsx';
 import { setUser } from '../reducers/userSlice.tsx';
 import { navigate, resetAndNavigate } from '../../utils/NavigationUtil.tsx';
-import { CHECK_EMAIL } from '../../connectors/API.tsx';
+import { CHECK_EMAIL, EMAIL_LOGIN } from '../../connectors/API.tsx';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
+import { token_storage } from '../storage.tsx';
 
 export const checkProfile = () => async (dispatch : any) => {
   try {
@@ -28,7 +29,8 @@ export const checkEmail = (data: CheckEmail) => async (dispatch: any) => {
   try {
     const res = await axios.post(CHECK_EMAIL, data);
     console.log("CHECK EMAIL-->", res.data);
-    let path = res.data.isExist ? 'EmailPasswordScreen' : 'EmailOtpScreen';
+    const emailExists = res.data === true;
+    const path = emailExists ? 'EmailPasswordScreen' : 'EmailOtpScreen';
     navigate(path, {email : data.email });
   } catch (error) {
     Toast.show({
@@ -40,3 +42,30 @@ export const checkEmail = (data: CheckEmail) => async (dispatch: any) => {
     console.log("CHECK EMAIL ERROR-->", error);
   }
 }
+
+
+interface EmailLogin {
+  email: string;
+  password: string;
+}
+
+export const emailLogin = (data: EmailLogin) => async (dispatch: any) => {
+  try {
+    const res = await axios.post(EMAIL_LOGIN, data);
+    console.log("EMAIL LOGIN-->", res.data);
+    token_storage.set("app_access_token", res.data.accessToken);
+    token_storage.set("app_refresh_token", res.data.refreshToken);
+    const { id, email, phoneExist, fullName } = res.data;
+    await dispatch(setUser({ id, email, phoneExist, fullName }));
+    resetAndNavigate('AuthVerificationScreen');
+  } catch (error: any) {
+    Toast.show({
+      type: "normalToast",
+      props: {
+        msg: error?.response?.data?.msg || "Something went wrong, please try again later"
+      }
+    })
+    console.log("EMAIL LOGIN ERROR-->", error);
+  }
+}
+

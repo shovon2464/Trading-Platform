@@ -3,8 +3,8 @@
 
 export const BASE_URL =
   Platform.OS === "android"
-    ? "http://10.0.2.2:3000"
-    : "http://localhost:3000";
+    ? "http://10.0.2.2:8080"
+    : "http://localhost:8080";
 
 export const SOCKET_URL =
   Platform.OS === "android"
@@ -24,3 +24,4 @@ export const TRADINGVIEW_WEB_URI =
  export const SEND_OTP = `${BASE_URL}/api/v1/auth/send-otp`;
  export const REGISTER = `${BASE_URL}/api/v1/auth/register`;
  export const OAUTH = `${BASE_URL}/api/v1/auth/oauth`;
+

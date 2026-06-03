@@ -82,8 +82,8 @@ const CustomInput:FC<InputProps & ComponentProps<typeof TextInput>> = ({
           secureTextEntry={password ? hideEyeIcon : false}
           autoCorrect={false}
           onFocus={() => {
-            onFoucs();
-            setIsFoucsed(true);
+            onFocus();
+            setIsFocused(true);
           }}
           maxLength={256}
           editable={!disabled}
