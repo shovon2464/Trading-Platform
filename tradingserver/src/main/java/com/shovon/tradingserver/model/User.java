@@ -52,6 +52,9 @@ public class User {
   @Builder.Default
   private Boolean isTwoFactorEnabled = false;
 
+  @Builder.Default
+  private Double balance = 0.0;
+
   private LocalDateTime createdDate;
 
   private LocalDateTime updatedDate;
