@@ -2,6 +2,7 @@ package com.shovon.tradingserver.service;
 
 import com.shovon.tradingserver.dto.request.UserCreateInput;
 import com.shovon.tradingserver.dto.request.UserLoginInput;
+import com.shovon.tradingserver.dto.request.UserUpdateInput;
 import com.shovon.tradingserver.dto.response.LoginResponse;
 import com.shovon.tradingserver.model.User;
 import com.shovon.tradingserver.repository.UserRepository;
@@ -92,6 +93,32 @@ public class UserService {
         .isTwoFactorEnabled(savedUser.getIsTwoFactorEnabled())
         .message("Account Created Successfully")
         .build();
+
+  }
+
+  public Boolean update(UserUpdateInput userUpdateInput, String email) {
+    if (email == null) {
+      throw new IllegalArgumentException("Email is required");
+    }
+    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    if (!email.matches(emailRegex)) {
+        throw new IllegalArgumentException("Invalid email format");
+    }
+
+    Optional<User> optUser = this.userRepository.findByEmail(email);
+
+    if (optUser.isEmpty()) {
+      throw new RuntimeException("User with this Email doesn't exists");
+    }
+
+    User user = optUser.get();
+    user.setFullName(userUpdateInput.getFullName());
+    user.setGender(userUpdateInput.getGender());
+    user.setUpdatedDate(TimeUtils.nowUtc());
+
+
+    User savedUser = this.userRepository.save(user);
+    return true;
 
   }
 
