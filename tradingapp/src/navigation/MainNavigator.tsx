@@ -1,12 +1,14 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { mergedStacks } from './ScreenCollections.tsx';
+import { WSProvider } from '../utils/WSProvider.tsx';
 
 const Stack = createNativeStackNavigator();
 
 
 const MainNavigator = () => {
   return (
+    <WSProvider>
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
@@ -23,6 +25,7 @@ const MainNavigator = () => {
         );
       })}
     </Stack.Navigator>
+    </WSProvider>
   );
 };
 

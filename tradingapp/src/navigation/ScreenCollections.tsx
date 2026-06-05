@@ -8,6 +8,9 @@ import Stock from '../screens/stock/Stock.tsx';
 import EmailPasswordScreen from '../screens/authentication/EmailPasswordScreen.tsx';
 import EmailOtpScreen from '../screens/authentication/EmailOtpScreen.tsx';
 import ForgotPassword from '../screens/authentication/ForgotPassword.tsx';
+import PinScreen from '../screens/authentication/PinScreen.tsx';
+import ConfirmPinScreen from '../screens/authentication/ConfirmPinScreen.tsx';
+import AccountProtectedScreen from '../screens/authentication/AccountProtectedScreen.tsx';
 
 export const authStacks = [
   {
@@ -44,6 +47,22 @@ export const authStacks = [
   },
   {
     name: 'ForgotPasswordScreen',
+    component: ForgotPassword,
+  },
+  {
+    name: 'PinScreen',
+    component: PinScreen,
+  },
+  {
+    name: 'ConfirmPinScreen',
+    component: ConfirmPinScreen,
+  },
+  {
+    name: 'AccountProtectedScreen',
+    component: AccountProtectedScreen
+  },
+  {
+    name: "ForgotPasswordScreen",
     component: ForgotPassword,
   }
 ];

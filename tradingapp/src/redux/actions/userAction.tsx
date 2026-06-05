@@ -5,6 +5,8 @@ import { CHECK_EMAIL, EMAIL_LOGIN, SEND_OTP, VERIFY_OTP } from '../../connectors
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import { token_storage } from '../storage.tsx';
+import { persistor } from '../store.tsx';
+import { deleteBiometricPublicKey } from '../../utils/BiometricUtils.tsx';
 
 export const checkProfile = () => async (dispatch : any) => {
   try {
@@ -57,7 +59,9 @@ export const emailLogin = (data: EmailLogin) => async (dispatch: any) => {
     token_storage.set("app_refresh_token", res.data.refreshToken);
     const { id, email, phoneExist, fullName } = res.data;
     await dispatch(setUser({ id, email, phoneExist, fullName }));
-    resetAndNavigate('PersonalDetailScreen');
+    if (!fullName) {
+      resetAndNavigate('PersonalDetailsScreen');
+    }
   } catch (error: any) {
     Toast.show({
       type: "normalToast",
@@ -124,3 +128,84 @@ export const verifyOtp = (data: VerifyOTP) => async (dispatch: any) => {
   }
 }
 
+interface Profile {
+  name: string;
+  gender: string;
+}
+
+export const updateProfile = (data: Profile) => async (dispatch: any) => {
+  try {
+    const res = await appAxios.put('api/v1/users/update-profile', data);
+    console.log('PROFILE ->', res.data);
+  } catch (error: any) {
+    console.log('PROFILE ->', error);
+  }
+};
+
+interface LoginPin {
+  login_pin: string;
+}
+
+export const setLoginPin =
+  (data: LoginPin, updateHook: () => void) => async (dispatch: any) => {
+    try {
+      const res = await appAxios.post('/auth/set-pin', data);
+      console.log(res.data);
+      token_storage.set(
+        'socket_access_token',
+        res.data.socket_tokens.socket_access_token,
+      );
+      token_storage.set(
+        'socket_refresh_token',
+        res.data.socket_tokens.socket_refresh_token,
+      );
+      updateHook();
+      resetAndNavigate('AccountProtectedScreen');
+    } catch (error: any) {
+      console.log('SET LOGIN PIN ->', error);
+    }
+  };
+
+
+export const Logout = () => async (dispatch: any) => {
+  try {
+    const res = await appAxios.post('/auth/logout');
+    await token_storage.clearAll();
+    await persistor.purge();
+    resetAndNavigate('LoginScreen');
+    await deleteBiometricPublicKey();
+  } catch (error: any) {
+    await token_storage.clearAll();
+    await persistor.purge();
+    resetAndNavigate('LoginScreen');
+    console.log('LOG OUT ->', error);
+  }
+};
+
+export const VerifyPin =
+  (data: LoginPin, updateHook: () => void) => async (dispatch: any) => {
+    try {
+      const res = await appAxios.post('/auth/verify-pin', data);
+      console.log(res.data);
+      const access_token = res.data.socket_tokens.socket_access_token;
+      token_storage.set('socket_access_token', access_token);
+      token_storage.set(
+        'socket_refresh_token',
+        res.data.socket_tokens.socket_refresh_token,
+      );
+      updateHook();
+      return { msg: 'Success', result: true };
+    } catch (error: any) {
+      console.log('VERIFY PIN ->', error);
+      return { msg: error?.response?.data?.msg, result: false };
+    }
+  };
+
+export const refetchUser = () => async (dispatch: any) => {
+  try {
+    const res = await appAxios.get('/auth/profile');
+    await dispatch(setUser(res.data));
+  } catch (error: any) {
+    console.log('PROFILE ->', error);
+  }
+};

@@ -1,12 +1,20 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import BiometricVerification from './BiometricVerification';
+import ResetPin from './ResetPin';
 
-const AuthVerification = () => {
+const AuthVerificationScreen = () => {
+  const [authScreen, setAuthScreen] = useState('Biometric');
+
   return (
-    <View>
-      <Text>AuthtVerification</Text>
-    </View>
-  )
-}
+    <>
+      {authScreen === 'Biometric' ? (
+        <BiometricVerification onForgotPin={() => setAuthScreen('ResetPin')} />
+      ) : (
+        <ResetPin />
+      )}
+    </>
+  );
+};
 
-export default AuthVerification;
+export default AuthVerificationScreen;
