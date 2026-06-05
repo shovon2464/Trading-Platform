@@ -40,8 +40,15 @@ public class Order {
   @Column(name = "userId", insertable = false, updatable = false)
   private Long userId;
 
+  @Column(name = "stock_id", nullable = false)
+  private String stockId;
+
+
   @Column(name = "price", nullable = false)
-  private int price;
+  private Double price;
+
+  @Column(name = "quantity", nullable = false)
+  private int quantity;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "order_type", nullable = false)
@@ -49,6 +56,6 @@ public class Order {
 
   private LocalDateTime createdDate;
 
-  private Long remainingBalance;
+  private Double remainingBalance;
 
 }
