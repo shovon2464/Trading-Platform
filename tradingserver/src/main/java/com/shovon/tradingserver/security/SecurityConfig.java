@@ -34,23 +34,13 @@ public class SecurityConfig {
       CorsConfigurationSource corsConfigurationSource) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .cors((cors) -> cors.configurationSource(corsConfigurationSource()))
-        .authorizeHttpRequests(
-            (authorize) -> {
-              authorize
-                  .requestMatchers("/api/v1/users/create-account")
-                  .permitAll()
-                  .requestMatchers("/api/v1/auth/login")
-                  .permitAll()
-                  .requestMatchers("/api/v1/auth/refresh-token")
-                  .permitAll()
-                  .requestMatchers("/api/v1/auth/check-email")
-                  .permitAll()
-                  .anyRequest()
-                  .authenticated();
-            }
-        )
-        .httpBasic(AbstractHttpConfigurer::disable)
-        .formLogin(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests((authorize) -> {
+          authorize.requestMatchers("/ws/**").permitAll()  // add this
+              .requestMatchers("/api/v1/users/create-account").permitAll()
+              .requestMatchers("/api/v1/auth/login").permitAll()
+              .requestMatchers("/api/v1/auth/refresh-token").permitAll()
+              .requestMatchers("/api/v1/auth/check-email").permitAll().anyRequest().authenticated();
+        }).httpBasic(AbstractHttpConfigurer::disable).formLogin(AbstractHttpConfigurer::disable)
         .rememberMe(Customizer.withDefaults());
     http.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
@@ -61,6 +51,7 @@ public class SecurityConfig {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
+    config.addAllowedOrigin("http://localhost:3001"); // <-- ADD THIS LINE
     config.addAllowedOrigin("http://localhost:8081");
     config.addAllowedOrigin("http://localhost:8082");
     config.addAllowedOrigin("http://localhost:8084");

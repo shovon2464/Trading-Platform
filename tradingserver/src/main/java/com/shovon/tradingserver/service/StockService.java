@@ -16,7 +16,7 @@ public class StockService {
   private StockRepository stockRepository;
 
   public Stock register(StockInput stockInput) {
-    Optional<Stock> optStock = this.stockRepository.findBySymbol(stockInput.getSymbol());
+    Optional<Stock> optStock = this.stockRepository.findFirstBySymbol(stockInput.getSymbol());
 
     if (optStock.isPresent()) {
       throw new RuntimeException("Stock with this symbol already exists");

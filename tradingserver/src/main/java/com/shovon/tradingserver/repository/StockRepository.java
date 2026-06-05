@@ -11,6 +11,8 @@ public interface StockRepository extends MongoRepository<Stock, String>, StockRe
 
     Optional<Stock> findBySymbol(String symbol);
 
+    Optional<Stock> findFirstBySymbol(String symbol);
+
     boolean existsBySymbol(String symbol);
 
     void deleteBySymbol(String symbol);

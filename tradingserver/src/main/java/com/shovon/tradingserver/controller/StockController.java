@@ -6,6 +6,7 @@ import com.shovon.tradingserver.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,8 @@ public class StockController {
   @Autowired
   private StockService stockService;
 
-  @PostMapping("/register-stock")
+  @PreAuthorize("isAuthenticated()")
+  @PostMapping("/register")
   public ResponseEntity<?> registerStock(@RequestBody StockInput stockInput) {
     try {
       stockInput.validate();
@@ -30,6 +32,7 @@ public class StockController {
     }
   }
 
+  @PreAuthorize("isAuthenticated()")
   @GetMapping
   public ResponseEntity<?> getAllStocks() {
     try {
@@ -39,7 +42,8 @@ public class StockController {
     }
   }
 
-  @GetMapping("/by-symbol")
+  @PreAuthorize("isAuthenticated()")
+  @GetMapping("/stock")
   public ResponseEntity<?> getStockBySymbol(@RequestParam("stock") String symbol) {
     try {
       if (symbol == null || symbol.trim().isEmpty()) {

@@ -45,6 +45,9 @@ spring:
           auth: true
           starttls:
             enable: true
+  mongodb:
+    uri: ${MONGO_URI}
+    database: ${MONGO_DATABASE}
 
 
 
