@@ -40,7 +40,7 @@ public class UserService {
       return true;
     }
 
-    this.otpService.sendOtp(email, OtpType.CREATE_ACCOUNT);
+    //this.otpService.sendOtp(email, OtpType.CREATE_ACCOUNT);
     return false;
   }
 

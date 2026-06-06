@@ -11,6 +11,7 @@ import ForgotPassword from '../screens/authentication/ForgotPassword.tsx';
 import PinScreen from '../screens/authentication/PinScreen.tsx';
 import ConfirmPinScreen from '../screens/authentication/ConfirmPinScreen.tsx';
 import AccountProtectedScreen from '../screens/authentication/AccountProtectedScreen.tsx';
+import CreatePasswordScreen from '../screens/authentication/CreatePasswordScreen.tsx';
 
 export const authStacks = [
   {
@@ -59,12 +60,12 @@ export const authStacks = [
   },
   {
     name: 'AccountProtectedScreen',
-    component: AccountProtectedScreen
+    component: AccountProtectedScreen,
   },
   {
-    name: "ForgotPasswordScreen",
-    component: ForgotPassword,
-  }
+    name: 'CreatePasswordScreen',
+    component: CreatePasswordScreen,
+  },
 ];
 
 

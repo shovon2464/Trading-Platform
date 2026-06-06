@@ -13,7 +13,7 @@ import { FONTS } from '../../constants/Fonts';
 import { useTheme } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../../redux/reduxHook';
 import { selectUser } from '../../redux/reducers/userSlice';
-import { SendOTP, VerifyOTP } from '../../redux/actions/userAction';
+import { sendOtp, verifyOtp } from '../../redux/actions/userAction';
 import { Colors } from '../../constants/Colors';
 import { RFValue } from 'react-native-responsive-fontsize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -33,7 +33,7 @@ const PhoneScreen = () => {
 
   const handleSendOTP = async () => {
     setLoading(true);
-    await dispatch(SendOTP({ email: user.email || '', otp_type: 'phone' }));
+    await dispatch(sendOtp({ email: user.email || '', otp_type: 'phone' }));
     setOtpSent(true);
     setLoading(false);
   };
@@ -45,7 +45,7 @@ const PhoneScreen = () => {
     }
     setLoading(true);
     await dispatch(
-      VerifyOTP({
+      verifyOtp({
         email: user.email || '',
         otp_type: 'phone',
         data: phoneNumber,

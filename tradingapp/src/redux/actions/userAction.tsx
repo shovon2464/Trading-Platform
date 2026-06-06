@@ -32,7 +32,7 @@ export const checkEmail = (data: CheckEmail) => async (dispatch: any) => {
     const res = await axios.post(CHECK_EMAIL, data);
     console.log("CHECK EMAIL-->", res.data);
     const emailExists = res.data === true;
-    const path = emailExists ? 'EmailPasswordScreen' : 'EmailOtpScreen';
+    const path = emailExists ? 'EmailPasswordScreen' : 'CreatePasswordScreen';
     navigate(path, {email : data.email });
   } catch (error) {
     Toast.show({

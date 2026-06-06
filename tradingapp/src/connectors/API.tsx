@@ -17,6 +17,7 @@ export const TRADINGVIEW_WEB_URI =
     : "http://localhost:3001";
 
 
+ export const CREATE_ACCOUNT = `${BASE_URL}/api/v1/users/create-account`;
  export const CHECK_EMAIL = `${BASE_URL}/api/v1/auth/check-email`;
  export const EMAIL_LOGIN = `${BASE_URL}/api/v1/auth/login`;
  export const REFRESH_TOKEN = `${BASE_URL}/api/v1/auth/refresh-token`;

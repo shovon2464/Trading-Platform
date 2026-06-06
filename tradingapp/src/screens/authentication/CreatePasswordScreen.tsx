@@ -1,33 +1,25 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
-import { useTheme } from '@react-navigation/native';
-import { useAppDispatch } from '../../redux/reduxHook';
 import { validatePasswordEntry } from '../../utils/ValidationUtils';
-import { sendOtp, verifyOtp } from '../../redux/actions/userAction';
 import CustomSafeAreaView from '../../components/global/CustomSafeAreaView';
 import BackButton from '../../components/global/BackButton';
 import CustomInput from '../../components/inputs/CustomInputs';
-import OtpTimer from '../../components/authentication/OtpTimer';
-import { RFValue } from 'react-native-responsive-fontsize';
 import CustomButton from '../../components/global/CustomButton';
-import CustomText from '../../components/global/CustomText';
 import { GlobalStyles } from '../../styles/GlobalStyles';
 import GuidelineText from '../../components/global/GuidelineText';
+import { navigate } from '../../utils/NavigationUtil';
+import axios from 'axios';
+import { CREATE_ACCOUNT } from '../../connectors/API.tsx';
 
 interface PasswordInputs {
   password: string;
   confirmpassword: string;
-  otp: string;
 }
 
-const ForgotPassword = ({ route }: any) => {
-  const { colors } = useTheme();
-  const dispatch = useAppDispatch();
-  const [otpSent, setOtpSent] = useState(false);
+const CreatePasswordScreen = ({ route }: any) => {
   const [inputs, setInputs] = useState<PasswordInputs>({
     password: '',
     confirmpassword: '',
-    otp: '',
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string | undefined }>();
@@ -48,10 +40,10 @@ const ForgotPassword = ({ route }: any) => {
   const validateForm = () => {
     const newErrors: { [key: string]: string | undefined } = {};
     if (!inputs.password.trim()) {
-      newErrors.password = 'Enter new password';
+      newErrors.password = 'Enter a password';
     }
     if (!inputs.confirmpassword.trim()) {
-      newErrors.confirmpassword = 'Enter confirm password';
+      newErrors.confirmpassword = 'Confirm your password';
     }
     if (
       !validatePasswordEntry(inputs.password, 'test', route?.params?.email)
@@ -61,8 +53,8 @@ const ForgotPassword = ({ route }: any) => {
         'Set a stronger password, kindly refer to guidelines below.';
     }
 
-    if (inputs?.confirmpassword != inputs?.password) {
-      newErrors.confirmpassword = 'Confirm Password not match';
+    if (inputs?.confirmpassword !== inputs?.password) {
+      newErrors.confirmpassword = 'Passwords do not match';
     }
 
     setErrors(newErrors);
@@ -70,106 +62,71 @@ const ForgotPassword = ({ route }: any) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleUpdatePassword = async () => {
+  const handleCreateAccount = async () => {
     if (validateForm()) {
       setLoading(true);
-      await dispatch(
-        sendOtp({
-          email: route.params.email || '',
-          otp_type: 'reset_password',
-        }),
-      );
-      setOtpSent(true);
-      setLoading(false);
-    }
-  };
+      try {
+        const payload = {
+          email: route.params?.email,
+          password: inputs.password,
+        };
 
-  const verifyOtp = async () => {
-    setLoading(true);
-    setLoading(false);
+        // Call your Spring Boot API
+        await axios.post(CREATE_ACCOUNT, payload,);
+
+        // On success, navigate directly to PersonalDetailsScreen
+        navigate('PersonalDetailsScreen', { email: route.params?.email });
+      } catch (error) {
+        console.log('Account creation error:', error);
+        // Show an error below the confirm password box if the API fails
+        setErrors({ confirmpassword: 'Failed to create account. Try again.' });
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   return (
     <CustomSafeAreaView>
       <BackButton />
+
       <CustomInput
-        label="NEW PASSWORD"
+        label="CREATE PASSWORD"
         placeholder="8-20 Characters"
         value={inputs?.password}
         error={errors?.password}
         onChangeText={text => handleOnChange(text, 'password')}
         password
       />
+
       <CustomInput
-        label="CONFIRM NEW PASSWORD"
+        label="CONFIRM PASSWORD"
         placeholder="8-20 Characters"
         error={errors?.confirmpassword}
         value={inputs.confirmpassword}
         onChangeText={text => handleOnChange(text, 'confirmpassword')}
+        onSubmitEditing={handleCreateAccount}
         password
       />
 
-      {otpSent && (
-        <CustomInput
-          error={errors?.otp}
-          value={inputs.otp}
-          keyboardType="number-pad"
-          returnKeyType="done"
-          onSubmitEditing={verifyOtp}
-          rightIcon={
-            <OtpTimer
-              style={{
-                color: colors.text,
-                opacity: 0.8,
-                fontSize: RFValue(10),
-                right: 20,
-              }}
-              type="email"
-              onPress={() => handleUpdatePassword()}
-            />
-          }
-          maxLength={6}
-          onChangeText={text => handleOnChange(text, 'otp')}
-        />
-      )}
-
       <View style={GlobalStyles.bottomBtn}>
-        {errors?.otp && (
-          <View style={styles.errorContainer}>
-            <CustomText variant="h7">
-              Wrong OTP, 2 attempts remaining
-            </CustomText>
-          </View>
-        )}
-
         <GuidelineText
           text={[
             'Password must have at least one uppercase and lowercase letter.',
             'Must contain at least one number and one special character',
             "Must not contain user's first/last name & email id",
-            'Must be different from previous password',
           ]}
         />
 
         <CustomButton
           disabled={loading}
           loading={loading}
-          text={otpSent ? 'UPDATE PASSWORD' : 'SEND OTP'}
-          onPress={otpSent ? verifyOtp : handleUpdatePassword}
+          text="CREATE ACCOUNT"
+          onPress={handleCreateAccount}
         />
       </View>
     </CustomSafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  errorContainer: {
-    backgroundColor: 'rgba(255, 0, 0, 0.2)',
-    padding: 10,
-    justifyContent: 'center',
-    borderRadius: 4,
-    alignItems: 'center',
-  },
-});
-
-export default ForgotPassword;
+export default CreatePasswordScreen;

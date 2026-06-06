@@ -66,7 +66,7 @@ const EmailPasswordScreen = ({ route }: any) => {
 
         <TouchableOpacity
           onPress={() =>
-            navigate('ForgotPassword', {
+            navigate('ForgotPasswordScreen', {
               email: route?.params?.email || '',
             })
           }
