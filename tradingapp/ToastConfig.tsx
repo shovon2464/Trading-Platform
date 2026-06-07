@@ -7,18 +7,21 @@ interface ToastConfigProps {
 }
 
 export const toastConfig = {
-  successToast: ({ props } : { props: ToastConfigProps }) => (
+  successToast: ({ props }: { props: ToastConfigProps }) => (
     <CustomToastMessage type="successToast" msg={props.msg} />
   ),
 
-  warningToast: ({ props } : { props: ToastConfigProps }) => (
+  warningToast: ({ props }: { props: ToastConfigProps }) => (
     <CustomToastMessage type="warningToast" msg={props.msg} />
   ),
 
-  normalToast: ({ props } : { props: ToastConfigProps }) => (
+  normalToast: ({ props }: { props: ToastConfigProps }) => (
     <CustomToastMessage type="normalToast" msg={props.msg} />
-  )
+  ),
 
+  errorToast: ({ props }: { props: ToastConfigProps }) => (
+    <CustomToastMessage type="errorToast" msg={props.msg} />
+  ),
 };
 
 export default toastConfig;
