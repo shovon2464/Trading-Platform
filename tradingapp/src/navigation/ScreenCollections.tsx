@@ -12,6 +12,10 @@ import PinScreen from '../screens/authentication/PinScreen.tsx';
 import ConfirmPinScreen from '../screens/authentication/ConfirmPinScreen.tsx';
 import AccountProtectedScreen from '../screens/authentication/AccountProtectedScreen.tsx';
 import CreatePasswordScreen from '../screens/authentication/CreatePasswordScreen.tsx';
+import TradingView from '../screens/stock/TradingView.tsx';
+import Transaction from '../screens/stock/Transaction.tsx';
+import TransactionSuccess from '../screens/stock/TransactionSuccess.tsx';
+import ProfileScreen from '../screens/authentication/ProfileScreen.tsx';
 
 export const authStacks = [
   {
@@ -66,14 +70,30 @@ export const authStacks = [
     name: 'CreatePasswordScreen',
     component: CreatePasswordScreen,
   },
+  {
+    name: 'ProfileScreen',
+    component: ProfileScreen,
+  }
 ];
 
 
 export const dashboardStacks = [
   {
-    name: "Stock",
+    name: 'Stock',
     component: Stock,
   },
+  {
+    name: 'TradingView',
+    component: TradingView
+  },
+  {
+    name: 'Transaction',
+    component: Transaction
+  },
+  {
+    name: 'TransactionSuccess',
+    component: TransactionSuccess
+  }
 ];
 
 export const mergedStacks = [...authStacks, ...dashboardStacks]
