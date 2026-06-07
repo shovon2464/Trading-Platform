@@ -21,7 +21,6 @@ public class StockController {
   @Autowired
   private StockService stockService;
 
-  @PreAuthorize("isAuthenticated()")
   @PostMapping("/register")
   public ResponseEntity<?> registerStock(@RequestBody StockInput stockInput) {
     try {
@@ -32,7 +31,6 @@ public class StockController {
     }
   }
 
-  @PreAuthorize("isAuthenticated()")
   @GetMapping
   public ResponseEntity<?> getAllStocks() {
     try {
@@ -42,7 +40,6 @@ public class StockController {
     }
   }
 
-  @PreAuthorize("isAuthenticated()")
   @GetMapping("/stock")
   public ResponseEntity<?> getStockBySymbol(@RequestParam("stock") String symbol) {
     try {

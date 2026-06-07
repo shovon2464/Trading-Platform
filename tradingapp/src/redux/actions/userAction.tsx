@@ -17,6 +17,8 @@ export const checkProfile = () => async (dispatch : any) => {
 
     if (!fullName) {
       resetAndNavigate("PersonalDetailScreen");
+    } else {
+      resetAndNavigate("Stock");
     }
   } catch (error) {
     console.log("PROFILE ->", error);
